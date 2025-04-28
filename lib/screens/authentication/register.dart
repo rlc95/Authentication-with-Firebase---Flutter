@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
 
   String email = "";
   String password = "";
-
+  String error = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +42,7 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     children: [
                       TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: inputTextDecoration,
                         validator:
                             (value) =>
@@ -54,11 +55,15 @@ class _RegisterState extends State<Register> {
                           });
                         },
                       ),
-                
-                    SizedBox(height: 20),
-                
+
+                      SizedBox(height: 20),
+
                       TextFormField(
-                        decoration: inputTextDecoration.copyWith(hintText: "password"),
+                        obscureText: true,
+                        style: TextStyle(color: Colors.white),
+                        decoration: inputTextDecoration.copyWith(
+                          hintText: "password",
+                        ),
                         validator:
                             (value) =>
                                 value!.length < 6
@@ -70,11 +75,14 @@ class _RegisterState extends State<Register> {
                           });
                         },
                       ),
-                
+
                       SizedBox(height: 30),
-                
-                      Text("Login with social accounts", style: descriptionStyle),
-                
+                      Text(error, style:TextStyle(color: Colors.red),),
+                      Text(
+                        "Login with social accounts",
+                        style: descriptionStyle,
+                      ),
+
                       GestureDetector(
                         //Sign in using google
                         onTap: () {},
@@ -82,7 +90,7 @@ class _RegisterState extends State<Register> {
                           child: Image.asset("/google.png", height: 70),
                         ),
                       ),
-                
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -93,7 +101,9 @@ class _RegisterState extends State<Register> {
                           SizedBox(width: 10),
                           GestureDetector(
                             //go to login
-                            onTap: () {widget.toggle();},
+                            onTap: () {
+                              widget.toggle();
+                            },
                             child: Text(
                               "LOGIN",
                               style: TextStyle(
@@ -104,11 +114,20 @@ class _RegisterState extends State<Register> {
                           ),
                         ],
                       ),
-                
+
                       SizedBox(height: 10),
-                
+
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          dynamic result = await _auth
+                              .registerWithEmailandPassword(email, password);
+
+                          if (result == null) {
+                            setState(() {
+                              error = "Please enter valid email";
+                            });
+                          }
+                        },
                         child: Container(
                           height: 40,
                           width: 200,
@@ -128,7 +147,7 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                       ),
-                
+
                       SizedBox(height: 10),
                     ],
                   ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/constants/colors.dart';
 import 'package:flutter_app/constants/description.dart';
@@ -19,7 +20,7 @@ class _LoginState extends State<Login> {
 
   String email = "";
   String password = "";
-
+  String error = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +43,7 @@ class _LoginState extends State<Login> {
                   child: Column(
                     children: [
                       TextFormField(
+                        style: TextStyle(color: Colors.white),
                         decoration: inputTextDecoration,
                         validator:
                             (value) =>
@@ -56,6 +58,8 @@ class _LoginState extends State<Login> {
                       ),
                       SizedBox(height: 20),
                       TextFormField(
+                        obscureText: true,
+                        style: TextStyle(color: Colors.white),
                         decoration: inputTextDecoration.copyWith(
                           hintText: "password",
                         ),
@@ -72,7 +76,7 @@ class _LoginState extends State<Login> {
                       ),
 
                       SizedBox(height: 30),
-
+                      Text(error, style: TextStyle(color: Colors.red)),
                       Text(
                         "Login with social accounts",
                         style: descriptionStyle,
@@ -115,7 +119,19 @@ class _LoginState extends State<Login> {
                       SizedBox(height: 10),
 
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          dynamic result = await _auth.signInUsungEmailPassword(
+                            email,
+                            password,
+                          );
+
+                          if (result == null) {
+                            setState(() {
+                              error =
+                                  "Could not sign in with these credentials";
+                            });
+                          }
+                        },
                         child: Container(
                           height: 40,
                           width: 200,
@@ -139,7 +155,9 @@ class _LoginState extends State<Login> {
                       SizedBox(height: 10),
 
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          await _auth.signAnonymously();
+                        },
                         child: Container(
                           height: 40,
                           width: 200,
