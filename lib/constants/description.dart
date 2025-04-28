@@ -1,0 +1,1 @@
+const String description = "For user identity, users are typically identified with a user ID; authentication occurs when the user provides credentials, such as a password, that match their user ID. The practice of requiring a user ID and password is known as single-factor authentication";
